@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <h1>Chatbot Demo</h1>
+
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <div id="user-input">
+            <input type="text" id="user-message" placeholder="Type your message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userMessage = document.getElementById('user-message').value;
+
+            // Add user's message to the chat
+            document.getElementById('chat-messages').innerHTML += '<p>User: ' + userMessage + '</p>';
+
+            // Send user's message to the server
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_message=' + encodeURIComponent(userMessage),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display chatbot's response
+                document.getElementById('chat-messages').innerHTML += '<p>Bot: ' + data.bot_response + '</p>';
+            });
+        }
+    </script>
+</body>
+</html>
